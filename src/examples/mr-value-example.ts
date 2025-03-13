@@ -4,7 +4,6 @@
 
 import { fetchMRValue } from '../igro-scraper.js';
 import { fetchRandomSample, getRandomItem } from './random-sample.js';
-import { State } from '../types/state.js';
 import logger from '../utils/logger.js';
 
 /**

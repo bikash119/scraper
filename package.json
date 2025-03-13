@@ -25,7 +25,8 @@
     "example:mr-value": "tsc && node --loader ts-node/esm src/examples/mr-value-example.ts",
     "build:example": "tsc src/examples/igro-example.ts --outDir dist/examples --module esnext --moduleResolution node --target es2020 --esModuleInterop",
     "run:example": "node dist/examples/igro-example.js",
-    "igro": "node igro-example.js"
+    "igro": "node igro-example.js",
+    "test": "vitest"
   },
   "dependencies": {
     "axios": "^1.6.8",
@@ -37,6 +38,7 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8"
   }
 }

@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import typescript from '@rollup/plugin-typescript'
 import { resolve } from 'path'
@@ -25,6 +26,10 @@ export default defineConfig({
         exports: 'named'
       }
     }
+  },
+  test: {
+    // globals: true,
+    // environment: 'jsdom',
   },
   resolve: {
     alias: {

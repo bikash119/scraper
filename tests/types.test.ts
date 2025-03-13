@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { BaseEntity, State, District, RegistrationOffice, Village, Plot, GeoCoordinates } from '../src/types/index.js';
+import { BaseEntity, State, District, RegistrationOffice, Village, Plot, GeoCoordinates } from '@/types/index.js';
 
 describe('Type Definitions', () => {
   describe('BaseEntity', () => {

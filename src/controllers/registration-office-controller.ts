@@ -2,17 +2,17 @@
  * Registration office controller implementation
  */
 
-import { BaseController } from './base-controller.js';
+import { BaseController } from '@/controllers/base-controller.js';
 import { 
   RegistrationOfficePayload, 
   RegistrationOfficeResult,
   Task 
-} from '../types/worker.js';
-import { ControllerConfig } from '../types/controller.js';
-import { RegistrationOfficeFetchWorker } from '../workers/registration-office-fetch-worker.js';
-import { WorkerConfig } from '../types/worker.js';
+} from '@/types/worker.js';
+import { ControllerConfig } from '@/types/controller.js';
+import { RegistrationOfficeFetchWorker } from '@/workers/registration-office-fetch-worker.js';
+import { WorkerConfig } from '@/types/worker.js';
 import { v4 as uuidv4 } from 'uuid';
-import logger from '../utils/logger.js';
+import logger from '@/utils/logger.js';
 
 /**
  * Controller for managing registration office fetch workers

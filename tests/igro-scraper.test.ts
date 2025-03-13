@@ -11,13 +11,13 @@ import {
   fetchPlots, 
   parseMRValueResponse,
   scrapeIGRO 
-} from '../src/igro-scraper.js';
+} from '@/igro-scraper.js';
 
 // Mock axios
 vi.mock('axios');
 
 // Mock logger to avoid console output during tests
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@/utils/logger.js', () => ({
   default: {
     info: vi.fn(),
     warn: vi.fn(),

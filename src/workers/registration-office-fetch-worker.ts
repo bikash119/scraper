@@ -6,10 +6,9 @@ import {
   RegistrationOfficePayload, 
   RegistrationOfficeResult,
   WorkerConfig 
-} from '../types/worker.js';
-import { BaseWorker } from './base-worker.js';
-import logger from '../utils/logger.js';
-import { RegistrationOffice } from '../types/state.js';
+} from '@/types/worker.js';
+import { BaseWorker } from '@/workers/base-worker.js';
+import logger from '@/utils/logger.js';
 /**
  * Response structure from the registration office API
  */
@@ -65,7 +64,7 @@ export class RegistrationOfficeFetchWorker extends BaseWorker<RegistrationOffice
       }
       
       // Map response to registration offices
-      const offices: RegistrationOffice[] = response.d.map(office => ({
+      const offices: RegistrationOfficeResult = response.d.map(office => ({
         id: office.REGOFF_ID.toString(),
         name: office.REGOFF_NAME,
         head_id: office.REGOFF_HEAD_ID.toString(),

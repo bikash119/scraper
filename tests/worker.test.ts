@@ -11,10 +11,9 @@ import {
   SessionData,
   HttpClient,
   WorkerConfig
-} from '../src/types/worker.js';
-import { BaseWorker } from '../src/workers/base-worker.js';
-import { RegistrationOfficeFetchWorker } from '../src/workers/registration-office-fetch-worker.js';
-import { RegistrationOffice } from '../src/types/state.js';
+} from '@/types/worker.js';
+import { BaseWorker } from '@/workers/base-worker.js';
+import { RegistrationOfficeFetchWorker } from '@/workers/registration-office-fetch-worker.js';
 
 // Mock logger
 vi.mock('../src/utils/logger.js', () => ({

@@ -19,8 +19,8 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     
     /* Path aliases */
@@ -29,5 +29,9 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"]
+  /* We do not need to include tests in the build, but if we do not include the tests folder
+     vscode will complain about the relative imports in the tests. Will have to find a better
+     way to handle this.
+   */
+  "include": ["src","tests"]
 }

@@ -2,8 +2,10 @@
  * Example of using the controller architecture
  */
 
-import { Factory } from '../utils/factory.js';
-import logger from '../utils/logger.js';
+import { RegistrationOfficeController } from '@/controllers/registration-office-controller.js';
+import { Factory } from '@/utils/factory.js';
+import logger from '@/utils/logger.js';
+import { RegistrationOffice } from '@/types/state.js';
 
 /**
  * Main function to demonstrate the controller architecture
@@ -24,13 +26,13 @@ async function main() {
     logger.info(`Found ${districtIds.length} districts: ${Object.values(sessionData.districts).join(', ')}`);
     
     // Create registration office controller with 3 workers
-    const controller = factory.createRegistrationOfficeController(3, 1000, 500);
+    const controller:RegistrationOfficeController = factory.createRegistrationOfficeController(3, 1000, 500);
     
     // Fetch registration offices for all districts
     logger.info('Fetching registration offices for all districts...');
     const startTime = Date.now();
     
-    const offices = await controller.fetchRegistrationOffices(districtIds);
+    const offices:RegistrationOffice[] = await controller.fetchRegistrationOffices(districtIds);
     
     const endTime = Date.now();
     const duration = (endTime - startTime) / 1000;

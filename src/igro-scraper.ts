@@ -7,8 +7,8 @@
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { RegistrationOffice, Village, Plot,} from './types/state.js';
-import logger from './utils/logger.js';
+import { RegistrationOffice, Village, Plot,} from '@/types/state.js';
+import logger from '@/utils/logger.js';
 
 /**
  * Base URL for the IGRO Odisha website

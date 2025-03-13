@@ -7,7 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 // Mock the entire logger module first
-vi.mock('../src/utils/logger.js', () => {
+vi.mock('@/utils/logger.js', () => {
   // Create a mock implementation
   const mockLogger = {
     info: vi.fn(),

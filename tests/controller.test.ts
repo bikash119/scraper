@@ -5,19 +5,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { 
   Task, 
-  TaskResult, 
   RegistrationOfficePayload, 
   RegistrationOfficeResult,
   SessionData,
   HttpClient,
   Worker
-} from '../src/types/worker.js';
-import { BaseController } from '../src/controllers/base-controller.js';
-import { RegistrationOfficeController } from '../src/controllers/registration-office-controller.js';
-import { ControllerConfig } from '../src/types/controller.js';
+} from '@/types/worker.js';
+import { BaseController } from '@/controllers/base-controller.js';
+import { RegistrationOfficeController } from '@/controllers/registration-office-controller.js';
 
 // Mock logger
-vi.mock('../src/utils/logger.js', () => ({
+vi.mock('@/utils/logger.js', () => ({
   default: {
     info: vi.fn(),
     warn: vi.fn(),

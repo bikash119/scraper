@@ -5,10 +5,10 @@
  */
 
 // Export all types
-export * from './types/index.js';
+export * from '@/types/index.js';
 
 // Export IGRO scraper
-export * from './igro-scraper.js';
+export * from '@/igro-scraper.js';
 
 /**
  * Example function to demonstrate the library

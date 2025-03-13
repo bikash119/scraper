@@ -7,8 +7,8 @@ import {
   Task, 
   TaskResult, 
   WorkerConfig
-} from '../types/worker.js';
-import logger from '../utils/logger.js';
+} from '@/types/worker.js';
+import logger from '@/utils/logger.js';
 
 /**
  * Sleep function to add delay between requests

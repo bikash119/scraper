@@ -3,8 +3,8 @@
  */
 
 import axios from 'axios';
-import { HttpClient } from '../types/worker.js';
-import logger from './logger.js';
+import { HttpClient } from '@/types/worker.js';
+import logger from '@/utils/logger.js';
 
 /**
  * Implementation of the HttpClient interface using axios

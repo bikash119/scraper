@@ -55,6 +55,8 @@ This project uses Supabase as a database to store the scraped data. The database
    npm run db:setup
    ```
 
+If you encounter any issues during setup, refer to the [database README](db/README.md) for troubleshooting steps.
+
 For more details about the database structure, see the [database README](db/README.md).
 
 ## Usage

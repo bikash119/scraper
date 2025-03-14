@@ -78,6 +78,19 @@ To set up the database:
    npm run db:setup
    ```
 
+### Troubleshooting
+
+If you encounter an error about the `exec_sql` function not existing, you'll need to create this function manually:
+
+1. Log in to your Supabase dashboard
+2. Go to the SQL Editor
+3. Copy the contents of `create-exec-sql-function.sql` from this directory
+4. Paste and execute it in the SQL Editor
+5. Run the setup script again:
+   ```bash
+   npm run db:setup
+   ```
+
 ## Manual Setup
 
 If you prefer to set up the database manually:

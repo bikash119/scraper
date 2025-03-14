@@ -16,23 +16,24 @@
     "dist"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
-    "example:igro": "tsc && node --loader ts-node/esm src/examples/igro-example.ts",
-    "example:random": "tsc && node --loader ts-node/esm src/examples/random-sample.ts",
-    "example:mr-value": "tsc && node --loader ts-node/esm src/examples/mr-value-example.ts",
+    "example:igro": "node --loader ts-node/esm src/examples/igro-example.ts",
+    "example:random": "node --loader ts-node/esm src/examples/random-sample.ts",
+    "example:mr-value": "node --loader ts-node/esm src/examples/mr-value-example.ts",
     "build:example": "tsc src/examples/igro-example.ts --outDir dist/examples --module esnext --moduleResolution node --target es2020 --esModuleInterop",
     "run:example": "node dist/examples/igro-example.js",
     "igro": "node igro-example.js",
-    "test": "vitest"
+    "db:setup": "node db/setup-database.js"
   },
   "dependencies": {
-    "@types/uuid": "^10.0.0",
-    "axios": "^1.6.8",
+    "@supabase/supabase-js": "^2.39.7",
+    "axios": "^1.6.7",
     "cheerio": "^1.0.0-rc.12",
-    "uuid": "^11.1.0"
+    "dotenv": "^16.4.5",
+    "form-data": "^4.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.2",
@@ -40,7 +41,6 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0",
-    "vitest": "^3.0.8"
+    "vite": "^6.2.0"
   }
 }

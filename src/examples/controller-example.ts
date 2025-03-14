@@ -20,6 +20,7 @@ async function main() {
     
     // Get session data
     const sessionData = factory.getSessionProvider().getSessionData();
+    logger.info(`AntiXsrfToken received as part of session initialization: ${sessionData.antiXsrfToken}`);
     
     // Get district IDs
     const districtIds = Object.keys(sessionData.districts);
@@ -32,7 +33,7 @@ async function main() {
     logger.info('Fetching registration offices for all districts...');
     const startTime = Date.now();
     
-    const offices:RegistrationOffice[] = await controller.fetchRegistrationOffices(districtIds);
+    const offices:RegistrationOffice[] = await controller.fetchRegistrationOffices(districtIds.slice(0, 6));
     
     const endTime = Date.now();
     const duration = (endTime - startTime) / 1000;

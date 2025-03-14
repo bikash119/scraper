@@ -20,6 +20,7 @@ The scraper implements exponential backoff delays between requests to avoid over
 - **Market Rate Values**: Get market rate values for plots with detailed breakdowns
 - **Exponential Backoff**: Automatically increase delays between requests to avoid rate limiting
 - **Structured Data**: All data is returned in well-structured TypeScript interfaces
+- **Database Integration**: Store scraped data in a versioned, denormalized Supabase database
 
 ## Installation
 
@@ -30,7 +31,30 @@ cd scraper
 
 # Install dependencies
 npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your Supabase credentials
 ```
+
+## Database Setup
+
+This project uses Supabase as a database to store the scraped data. The database schema is designed with versioning to track changes over time.
+
+### Setting Up the Database
+
+1. Create a Supabase project at [supabase.com](https://supabase.com)
+2. Add your Supabase credentials to the `.env` file:
+   ```
+   SUPABASE_URL=https://your-project.supabase.co
+   SUPABASE_KEY=your-service-role-key
+   ```
+3. Run the database setup script:
+   ```bash
+   npm run db:setup
+   ```
+
+For more details about the database structure, see the [database README](db/README.md).
 
 ## Usage
 

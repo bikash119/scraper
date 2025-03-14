@@ -18,6 +18,7 @@ export class Factory {
   private sessionProvider: SessionProvider;
   private httpClient: AxiosHttpClient;
   private baseUrl: string;
+  private benchmarkPath = '/ViewFeeValue.aspx';
 
   /**
    * Creates a new Factory
@@ -26,7 +27,7 @@ export class Factory {
    */
   private constructor(baseUrl: string = 'https://igrodisha.gov.in') {
     this.baseUrl = baseUrl;
-    this.sessionProvider = new SessionProvider(baseUrl);
+    this.sessionProvider = new SessionProvider(this.baseUrl, this.benchmarkPath);
     this.httpClient = this.sessionProvider.getHttpClient();
   }
 

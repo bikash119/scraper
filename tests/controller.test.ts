@@ -277,9 +277,9 @@ describe('RegistrationOfficeController', () => {
     // Check that tasks were created correctly
     const tasks = worker.fetchBatch.mock.calls[0][0];
     expect(tasks.length).toBe(3);
-    expect(tasks[0].payload.districtId).toBe('1');
-    expect(tasks[1].payload.districtId).toBe('2');
-    expect(tasks[2].payload.districtId).toBe('3');
+    expect(tasks[0].payload.distId).toBe('1');
+    expect(tasks[1].payload.distId).toBe('2');
+    expect(tasks[2].payload.distId).toBe('3');
     
     // Check controller status
     const status = controller.getStatus();

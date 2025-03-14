@@ -21,6 +21,7 @@ The scraper implements exponential backoff delays between requests to avoid over
 - **Exponential Backoff**: Automatically increase delays between requests to avoid rate limiting
 - **Structured Data**: All data is returned in well-structured TypeScript interfaces
 - **Database Integration**: Store scraped data in a versioned, denormalized Supabase database
+- **TypeScript-First**: Fully typed codebase for better developer experience and code quality
 
 ## Installation
 

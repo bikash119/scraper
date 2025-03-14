@@ -90,17 +90,17 @@ If you prefer to set up the database manually:
 
 To use the database in your code:
 
-```javascript
-const { createClient } = require('@supabase/supabase-js');
+```typescript
+import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
 const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_KEY!
 );
 
 // Example: Insert a district
-async function insertDistrict(districtId, name) {
+async function insertDistrict(districtId: string, name: string): Promise<string | null> {
   const { data, error } = await supabase
     .rpc('create_new_district_version', {
       p_district_id: districtId,
@@ -116,7 +116,7 @@ async function insertDistrict(districtId, name) {
 }
 
 // Example: Query current districts
-async function getCurrentDistricts() {
+async function getCurrentDistricts(): Promise<any[]> {
   const { data, error } = await supabase
     .from('current_districts')
     .select('*');

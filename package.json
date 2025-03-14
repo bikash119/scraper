@@ -23,10 +23,11 @@
     "example:igro": "node --loader ts-node/esm src/examples/igro-example.ts",
     "example:random": "node --loader ts-node/esm src/examples/random-sample.ts",
     "example:mr-value": "node --loader ts-node/esm src/examples/mr-value-example.ts",
+    "example:db": "node --loader ts-node/esm src/examples/db-example.ts",
     "build:example": "tsc src/examples/igro-example.ts --outDir dist/examples --module esnext --moduleResolution node --target es2020 --esModuleInterop",
     "run:example": "node dist/examples/igro-example.js",
     "igro": "node igro-example.js",
-    "db:setup": "node db/setup-database.js"
+    "db:setup": "node --loader ts-node/esm db/setup-database.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",
@@ -41,6 +42,7 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^3.0.8"
   }
 }

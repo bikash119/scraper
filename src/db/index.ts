@@ -61,7 +61,6 @@ export interface VillageData {
 export interface PlotData {
   plot_id: string;
   plot_no: string;
-  khata_no: string;
   area?: number;
   area_unit?: string;
   plot_type?: string;
@@ -79,7 +78,6 @@ export interface PlotData {
 export interface MarketRateValueData {
   plot_id: string;
   plot_no: string;
-  khata_no: string;
   village_id: string;
   village_name: string;
   registration_office_id: string;
@@ -215,7 +213,6 @@ export async function upsertPlot(
     const { data, error } = await supabase.rpc('create_new_plot_version', {
       p_plot_id: plot.plot_id,
       p_plot_no: plot.plot_no,
-      p_khata_no: plot.khata_no,
       p_area: plot.area || null,
       p_area_unit: plot.area_unit || null,
       p_plot_type: plot.plot_type || null,
@@ -259,7 +256,6 @@ export async function upsertMarketRateValue(
     const { data, error } = await supabase.rpc('create_new_market_rate_value_version', {
       p_plot_id: plotUuid,
       p_plot_no: mrValue.plot_no,
-      p_khata_no: mrValue.khata_no,
       p_village_id: villageUuid,
       p_village_name: mrValue.village_name,
       p_registration_office_id: registrationOfficeUuid,

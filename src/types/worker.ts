@@ -12,6 +12,10 @@ export interface SessionData {
   cookies: string[];
   data: string;
   districts: Record<string, string>;
+  state: {
+    id: string;
+    name: string;
+  };
 }
 
 /**
@@ -124,7 +128,7 @@ export interface WorkerConfig {
   /**
    * Session data provider
    */
-  sessionProvider: () => SessionData;
+  sessionData: () => SessionData;
 }
 
 /**
@@ -158,17 +162,29 @@ export interface Worker<P, R> {
 // Registration Office Worker
 export type RegistrationOfficePayload = {
   districtId: string;
+  stateId: string;
+  stateName: string;
 };
 export type RegistrationOfficeResult = RegistrationOffice[];
 
 // Village Worker
 export type VillagePayload = {
   registrationOfficeId: string;
+  districtId: string;
+  districtName: string;
+  stateId: string;
+  stateName: string;
 };
 export type VillageResult = Village[];
 
 // Plot Worker
 export type PlotPayload = {
   villageId: string;
+  registrationOfficeId: string;
+  registrationOfficeName: string;
+  districtId: string;
+  districtName: string;
+  stateId: string;
+  stateName: string;
 };
 export type PlotResult = Plot[]; 

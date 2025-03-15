@@ -107,7 +107,7 @@ export class BaseWorker<P, R> implements Worker<P, R> {
    * @returns Headers with session information and additional headers
    */
   protected createHeaders(additionalHeaders?: Record<string, string>): Record<string, string> {
-    const sessionData = this.config.sessionProvider();
+    const sessionData = this.config.sessionData();
     
     const headers: Record<string, string> = {
       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',

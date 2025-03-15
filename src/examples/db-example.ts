@@ -16,10 +16,10 @@ import {
   upsertPlot,
   upsertMarketRateValue,
   getCurrentDistricts
-} from '../db';
+} from '@/db/index.js';
 
-import { fetchRandomSample } from './random-sample';
-import { fetchMRValueOfRandomPlots } from './mr-value-example';
+import { fetchRandomSample } from '@/examples/random-sample.js';
+import {fetchMRValueOfRandomPlots} from '@/examples/mr-value-example.js';
 
 /**
  * Stores a random sample of data in the database
@@ -54,25 +54,25 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
       throw new Error('Failed to fetch random sample');
     }
     
-    const { district, registrationOffice, village, plots } = sample;
+    const { districts } = sample;
     
-    console.log(`Storing district: ${district.name}`);
+    console.log(`Storing district: ${districts[0].name}`);
     const districtUuid = await upsertDistrict({
-      district_id: district.id,
-      name: district.name
+      district_id: districts[0].id,
+      name: districts[0].name
     });
     
     if (!districtUuid) {
       throw new Error('Failed to store district');
     }
-    
-    console.log(`Storing registration office: ${registrationOffice.name}`);
+    const registration_offices = districts[0].registration_offices;
+    console.log(`Storing registration office: ${registration_offices[0].name}`);
     const registrationOfficeUuid = await upsertRegistrationOffice(
       {
-        registration_office_id: registrationOffice.id,
-        name: registrationOffice.name,
-        district_id: district.id,
-        district_name: district.name
+        registration_office_id: registration_offices[0].id,
+        name: registration_offices[0].name,
+        district_id: districts[0].id,
+        district_name: districts[0].name
       },
       districtUuid
     );
@@ -80,16 +80,16 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
     if (!registrationOfficeUuid) {
       throw new Error('Failed to store registration office');
     }
-    
-    console.log(`Storing village: ${village.name}`);
+    const villages = registration_offices[0].villages;
+    console.log(`Storing village: ${villages[0].name}`);
     const villageUuid = await upsertVillage(
       {
-        village_id: village.id,
-        name: village.name,
-        registration_office_id: registrationOffice.id,
-        registration_office_name: registrationOffice.name,
-        district_id: district.id,
-        district_name: district.name
+        village_id: villages[0].id,
+        name: villages[0].name,
+        registration_office_id: registration_offices[0].id,
+        registration_office_name: registration_offices[0].name,
+        district_id: districts[0].id,
+        district_name: districts[0].name
       },
       registrationOfficeUuid,
       districtUuid
@@ -98,7 +98,7 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
     if (!villageUuid) {
       throw new Error('Failed to store village');
     }
-    
+    const plots = villages[0].plots;
     console.log(`Storing ${plots.length} plots...`);
     let plotCount = 0;
     let errorCount = 0;
@@ -108,17 +108,16 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
         const plotUuid = await upsertPlot(
           {
             plot_id: plot.id,
-            plot_no: plot.plotNo,
-            khata_no: plot.khataNo,
-            area: parseFloat(plot.area) || undefined,
-            area_unit: plot.areaUnit,
-            plot_type: plot.plotType,
-            village_id: village.id,
-            village_name: village.name,
-            registration_office_id: registrationOffice.id,
-            registration_office_name: registrationOffice.name,
-            district_id: district.id,
-            district_name: district.name
+            plot_no: plot.plot_id,
+            area: plot.area,
+            area_unit: plot.area_unit,
+            plot_type: plot.plot_type,
+            village_id: villages[0].id,
+            village_name: villages[0].name,
+            registration_office_id: registration_offices[0].id,
+            registration_office_name: registration_offices[0].name,
+            district_id: districts[0].id,
+            district_name: districts[0].name
           },
           villageUuid,
           registrationOfficeUuid,
@@ -152,11 +151,10 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
           const plotUuid = await upsertPlot(
             {
               plot_id: mrValue.plot.id,
-              plot_no: mrValue.plot.plotNo,
-              khata_no: mrValue.plot.khataNo,
-              area: parseFloat(mrValue.plot.area) || undefined,
-              area_unit: mrValue.plot.areaUnit,
-              plot_type: mrValue.plot.plotType,
+              plot_no: mrValue.plot.plot_id,
+              area: mrValue.plot.area,
+              area_unit: mrValue.plot.area_unit,
+              plot_type: mrValue.plot.plot_type,
               village_id: mrValue.village.id,
               village_name: mrValue.village.name,
               registration_office_id: mrValue.registrationOffice.id,
@@ -174,8 +172,7 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
             const mrValueUuid = await upsertMarketRateValue(
               {
                 plot_id: mrValue.plot.id,
-                plot_no: mrValue.plot.plotNo,
-                khata_no: mrValue.plot.khataNo,
+                plot_no: mrValue.plot.plot_id,
                 village_id: mrValue.village.id,
                 village_name: mrValue.village.name,
                 registration_office_id: mrValue.registrationOffice.id,
@@ -222,13 +219,13 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
     
     // Query and display some data
     console.log('\nQuerying stored data:');
-    const districts = await getCurrentDistricts();
-    console.log(`Found ${districts.length} districts in the database`);
+    const currentDistricts = await getCurrentDistricts();
+    console.log(`Found ${currentDistricts.length} districts in the database`);
     
-    if (districts.length > 0) {
+    if (currentDistricts.length > 0) {
       console.log('Districts:');
-      districts.forEach(d => {
-        console.log(`- ${d.name} (ID: ${d.district_id})`);
+      currentDistricts.forEach(d => {
+        console.log(`- ${d.name} (ID: ${d.id})`);
       });
     }
     

@@ -67,7 +67,7 @@ export class Factory {
       baseUrl: this.baseUrl,
       endpoint,
       httpClient: this.httpClient,
-      sessionProvider: () => this.sessionProvider.getSessionData(),
+      sessionData: () => this.sessionProvider.getSessionData(),
       delayMs
     };
   }

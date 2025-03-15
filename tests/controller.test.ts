@@ -347,7 +347,7 @@ describe('RegistrationOfficeController', () => {
       baseUrl: 'https://example.com',
       endpoint: '/custom-endpoint',
       httpClient: {} as HttpClient,
-      sessionProvider: () => ({} as SessionData)
+      sessionData: () => ({} as SessionData)
     };
     
     const worker = controller.createWorker(workerConfig);

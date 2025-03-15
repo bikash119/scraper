@@ -10,6 +10,7 @@ export interface BaseEntity {
  * State representation with districts
  */
 export interface State extends BaseEntity {
+    state_id: string;
     districts: District[];
 }
 
@@ -17,6 +18,9 @@ export interface State extends BaseEntity {
  * District within a state
  */
 export interface District extends BaseEntity {
+    district_id: string;
+    state_id: string;
+    state_name: string;
     registration_offices: RegistrationOffice[];
 }
 
@@ -24,6 +28,11 @@ export interface District extends BaseEntity {
  * Registration center (sub-district level)
  */
 export interface RegistrationOffice extends BaseEntity {
+    registration_office_id: string;
+    district_id: string;
+    district_name: string;
+    state_id: string;
+    state_name: string;
     villages: Village[];
     type_id?: string;
     head_id?: string;
@@ -39,6 +48,13 @@ export interface RegistrationOffice extends BaseEntity {
  * Village or town
  */
 export interface Village extends BaseEntity {
+    village_id: string;
+    registration_office_id: string;
+    registration_office_name: string;
+    district_id: string;
+    district_name: string;
+    state_id: string;
+    state_name: string;
     plots: Plot[];
 }
 
@@ -57,6 +73,14 @@ export interface GeoCoordinates {
 export interface Plot extends BaseEntity {
     plot_number: string;
     plot_id: string;
+    village_id: string;
+    village_name: string;
+    registration_office_id: string;
+    registration_office_name: string;
+    district_id: string;
+    district_name: string;
+    state_id: string;
+    state_name: string;
     plot_type?: string;
     area?: number;
     area_unit?: string;

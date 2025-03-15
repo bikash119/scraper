@@ -2,7 +2,7 @@
  * Worker pool implementation for managing worker instances
  */
 
-import logger from '../utils/logger.js';
+import logger from '@/utils/logger.js';
 
 /**
  * Worker interface

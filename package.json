@@ -28,7 +28,8 @@
     "build:example": "tsc src/examples/igro-example.ts --outDir dist/examples --module esnext --moduleResolution node --target es2020 --esModuleInterop",
     "run:example": "node dist/examples/igro-example.js",
     "igro": "node igro-example.js",
-    "db:setup": "node --loader ts-node/esm db/setup-database.ts"
+    "db:setup": "node --loader ts-node/esm db/setup-database.ts",
+    "db:reset": "node --loader ts-node/esm db/setup-database.ts -- --drop"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",

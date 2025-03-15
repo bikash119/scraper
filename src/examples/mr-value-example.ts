@@ -2,9 +2,9 @@
  * Example script for fetching market rate values for random plots from the IGRO Odisha website
  */
 
-import { fetchMRValue } from '../igro-scraper.js';
-import { fetchRandomSample, getRandomItem } from './random-sample.js';
-import logger from '../utils/logger.js';
+import { fetchMRValue } from '@/igro-scraper.js';
+import { fetchRandomSample, getRandomItem } from '@/examples/random-sample.js';
+import logger from '@/utils/logger.js';
 
 /**
  * Fetches market rate values for random plots
@@ -136,6 +136,6 @@ async function main() {
     logger.error('Error running MR value example:', error instanceof Error ? error.message : String(error));
   }
 }
-
+export { fetchMRValueOfRandomPlots };
 // Run the main function
 main(); 

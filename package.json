@@ -24,6 +24,7 @@
     "example:random": "node --loader ts-node/esm src/examples/random-sample.ts",
     "example:mr-value": "node --loader ts-node/esm src/examples/mr-value-example.ts",
     "example:db": "node --loader ts-node/esm src/examples/db-example.ts",
+    "example:worker-pool": "node --loader ts-node/esm src/examples/worker-pool-example.ts",
     "build:example": "tsc src/examples/igro-example.ts --outDir dist/examples --module esnext --moduleResolution node --target es2020 --esModuleInterop",
     "run:example": "node dist/examples/igro-example.js",
     "igro": "node igro-example.js",
@@ -34,11 +35,13 @@
     "axios": "^1.6.7",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.4.5",
-    "form-data": "^4.0.0"
+    "form-data": "^4.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/node": "^22.13.10",
+    "@types/uuid": "^10.0.0",
     "ts-node": "^10.9.2",
     "tslib": "^2.6.2",
     "typescript": "~5.7.2",

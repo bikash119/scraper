@@ -6,8 +6,8 @@ import { AxiosHttpClient } from '@/utils/http-client.js';
 import { SessionProvider } from '@/utils/session-provider.js';
 import { RegistrationOfficeController } from '@/controllers/registration-office-controller.js';
 import { RegistrationOfficeFetchWorker } from '@/workers/registration-office-fetch-worker.js';
-import { ControllerConfig } from '@/types/controller.js';
-import { WorkerConfig } from '@/types/worker.js';
+import { ControllerConfig } from '@/core/types/controller.js';
+import { WorkerConfig } from '@/core/types/worker.js';
 import logger from '@/utils/logger.js';
 
 /**

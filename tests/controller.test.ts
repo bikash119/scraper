@@ -10,7 +10,7 @@ import {
   SessionData,
   HttpClient,
   Worker
-} from '@/types/worker.js';
+} from '@/core/types/worker.js';
 import { BaseController } from '@/controllers/base-controller.js';
 import { RegistrationOfficeController } from '@/controllers/registration-office-controller.js';
 

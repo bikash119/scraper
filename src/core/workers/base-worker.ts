@@ -7,7 +7,7 @@ import {
   Task, 
   TaskResult, 
   WorkerConfig
-} from '@/types/worker.js';
+} from '@/core/types/worker.js';
 import logger from '@/utils/logger.js';
 
 /**

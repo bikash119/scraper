@@ -2,7 +2,7 @@
  * Controller types for managing workers and task distribution
  */
 
-import { Task, TaskResult, Worker } from '@/types/worker.js';
+import { Task, TaskResult, Worker } from '@/core/types/worker.js';
 
 /**
  * Configuration for the controller

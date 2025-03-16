@@ -7,8 +7,8 @@ import {
   ControllerConfig, 
   ControllerStatus, 
   WorkerExecutionResult 
-} from '@/types/controller.js';
-import { Task, TaskResult, Worker } from '@/types/worker.js';
+} from '@/core/types/controller.js';
+import { Task, TaskResult, Worker } from '@/core/types/worker.js';
 import { sleep } from '@/workers/base-worker.js';
 import logger from '@/utils/logger.js';
 

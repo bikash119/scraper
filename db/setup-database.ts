@@ -8,6 +8,7 @@
  *    SUPABASE_URL=https://your-project.supabase.co
  *    SUPABASE_KEY=your-service-role-key
  * 2. Run this script: npm run db:setup
+ *    To drop existing schema first: npm run db:setup -- --drop
  */
 
 import fs from 'fs';
@@ -33,15 +34,30 @@ if (!supabaseUrl || !supabaseKey) {
   process.exit(1);
 }
 
+// Check if --drop flag is provided
+const shouldDropSchema = process.argv.includes('--drop');
+
 // Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Read the SQL schema file
 const schemaPath = path.join(__dirname, 'schema.sql');
+const dropSchemaPath = path.join(__dirname, 'drop-schema.sql');
 let sqlSchema: string;
+let dropSqlSchema: string | null = null;
 
 try {
   sqlSchema = fs.readFileSync(schemaPath, 'utf8');
+  
+  // Read drop schema file if --drop flag is provided
+  if (shouldDropSchema) {
+    try {
+      dropSqlSchema = fs.readFileSync(dropSchemaPath, 'utf8');
+    } catch (error) {
+      console.error(`Error reading drop schema file: ${(error as Error).message}`);
+      process.exit(1);
+    }
+  }
 } catch (error) {
   console.error(`Error reading schema file: ${(error as Error).message}`);
   process.exit(1);
@@ -99,10 +115,11 @@ function splitSqlStatements(sql: string): string[] {
 /**
  * Execute SQL statements against Supabase
  * @param sql - SQL statements to execute
+ * @param description - Description of the SQL being executed
  */
-async function executeSql(sql: string): Promise<void> {
+async function executeSql(sql: string, description: string = 'SQL schema'): Promise<void> {
   try {
-    console.log('Executing SQL schema...');
+    console.log(`Executing ${description}...`);
     
     // Split the SQL into individual statements
     const statements = splitSqlStatements(sql);
@@ -112,7 +129,7 @@ async function executeSql(sql: string): Promise<void> {
     for (let i = 0; i < statements.length; i++) {
       const statement = statements[i];
       console.log(`Executing statement ${i + 1}/${statements.length}...`);
-      
+      console.log(statement.slice(0, 30));
       try {
         const { error } = await supabase.rpc('exec_sql', { sql_query: statement });
         
@@ -134,7 +151,7 @@ async function executeSql(sql: string): Promise<void> {
       }
     }
     
-    console.log('Database setup completed successfully!');
+    console.log(`${description} execution completed successfully!`);
   } catch (error) {
     console.error(`Error: ${(error as Error).message}`);
     process.exit(1);
@@ -188,8 +205,16 @@ async function setupDatabase(): Promise<void> {
       console.log('exec_sql function exists. Proceeding with schema execution...');
     }
     
+    // Drop schema if requested
+    if (shouldDropSchema && dropSqlSchema) {
+      console.log('Drop schema flag detected. Dropping existing schema first...');
+      await executeSql(dropSqlSchema, 'Drop schema');
+    }
+    
     // Execute the schema
-    await executeSql(sqlSchema);
+    await executeSql(sqlSchema, 'Schema creation');
+    
+    console.log('Database setup completed successfully!');
   } catch (error) {
     console.error(`Error during database setup: ${(error as Error).message}`);
     process.exit(1);

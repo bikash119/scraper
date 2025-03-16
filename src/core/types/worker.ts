@@ -2,7 +2,7 @@
  * Types and interfaces for the IGRO scraper workers
  */
 
-import { RegistrationOffice, Village, Plot } from '@/types/state.js';
+import { RegistrationOffice, Village, Plot } from '@/core/types/state.js';
 
 /**
  * Session data interface for maintaining state across requests

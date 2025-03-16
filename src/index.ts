@@ -5,7 +5,7 @@
  */
 
 // Export all types
-export * from '@/types/index.js';
+export * from '@/core/types/index.js';
 
 // Export IGRO scraper
 export * from '@/igro-scraper.js';

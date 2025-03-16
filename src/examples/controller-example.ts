@@ -5,7 +5,7 @@
 import { RegistrationOfficeController } from '@/controllers/registration-office-controller.js';
 import { Factory } from '@/utils/factory.js';
 import logger from '@/utils/logger.js';
-import { RegistrationOffice } from '@/types/state.js';
+import { RegistrationOffice } from '@/core/types/state.js';
 
 /**
  * Main function to demonstrate the controller architecture

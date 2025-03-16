@@ -4,7 +4,7 @@
 
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { SessionData } from '@/types/worker.js';
+import { SessionData } from '@/core/types/worker.js';
 import { AxiosHttpClient } from '@/utils/http-client.js';
 import logger from '@/utils/logger.js';
 

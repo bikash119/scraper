@@ -3,7 +3,7 @@
  */
 
 import { initializeSession, fetchRegistrationOffices, fetchVillages, fetchPlots } from '../igro-scraper.js';
-import { State } from '../types/state.js';
+import { State } from '../core/types/state.js';
 import logger from '../utils/logger.js';
 
 /**

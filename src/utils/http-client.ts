@@ -3,7 +3,7 @@
  */
 
 import axios from 'axios';
-import { HttpClient } from '@/types/worker.js';
+import { HttpClient } from '@/core/types/worker.js';
 import logger from '@/utils/logger.js';
 
 /**

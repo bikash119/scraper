@@ -11,7 +11,7 @@ import {
   SessionData,
   HttpClient,
   WorkerConfig
-} from '@/types/worker.js';
+} from '@/core/types/worker.js';
 import { BaseWorker } from '@/workers/base-worker.js';
 import { RegistrationOfficeFetchWorker } from '@/workers/registration-office-fetch-worker.js';
 

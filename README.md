@@ -1,162 +1,175 @@
-# IGRO Odisha Scraper
+# Scraper Library
 
-A utility package for scraping land valuation data from the Inspector General of Registration Odisha (IGRO) website.
-
-## Overview
-
-This scraper allows you to fetch and analyze land valuation data from the [IGRO Odisha website](https://igrodisha.gov.in/ViewFeeValue.aspx). It provides functionality to:
-
-- Fetch registration offices for districts
-- Fetch villages for registration offices
-- Fetch plots for villages
-- Get market rate values for plots
-
-The scraper implements exponential backoff delays between requests to avoid overwhelming the server.
+A powerful and flexible web scraping library with resource management and concurrency control.
 
 ## Features
 
-- **Hierarchical Data Scraping**: Navigate through districts, registration offices, villages, and plots
-- **Random Sampling**: Fetch random samples of data from the hierarchy
-- **Market Rate Values**: Get market rate values for plots with detailed breakdowns
-- **Exponential Backoff**: Automatically increase delays between requests to avoid rate limiting
-- **Structured Data**: All data is returned in well-structured TypeScript interfaces
-- **Database Integration**: Store scraped data in a versioned, denormalized Supabase database
-- **TypeScript-First**: Fully typed codebase for better developer experience and code quality
+- **Resource Management**: Control the number of concurrent workers and request rates
+- **Worker Pool Management**: Efficiently manage and reuse workers
+- **Controller-based Architecture**: Organize scraping logic into controllers
+- **Type Safety**: Built with TypeScript for better developer experience
+- **Extensible**: Easy to extend with custom workers and controllers
 
-## Installation
+## Architecture
+
+The library is built around the following core components:
+
+### ScrapingSession
+
+The entry point to the scraper. It manages the entire scraping process, including:
+
+1. Adhering to resource limits
+2. Initializing the worker pool manager
+3. Creating and managing controllers
+4. Creating worker pools for controllers
+
+### WorkerPoolManager
+
+Manages worker pools and ensures resource limits are respected across all pools.
+
+### WorkerPool
+
+Manages a set of workers of the same type, allowing controllers to borrow and return workers as needed.
+
+### Controllers
+
+Controllers are responsible for creating workers, adding them to worker pools, and executing tasks. The library includes:
+
+- `BaseController`: A generic controller implementation that can be extended for specific use cases
+- Specialized controllers for specific scraping tasks (e.g., `DistrictController`, `RegistrationOfficeController`)
+
+Each controller is responsible for:
+1. Creating its own workers during initialization
+2. Adding workers to its assigned worker pool
+3. Borrowing workers from the pool to execute tasks
+4. Returning workers to the pool after task execution
+
+### Workers
+
+Workers are responsible for executing individual tasks. The library includes:
+
+- `BaseWorker`: A generic worker implementation that can be extended for specific use cases
+- Specialized workers for specific scraping tasks (e.g., `DistrictFetchWorker`, `RegistrationOfficeFetchWorker`)
+
+## Usage Example
+
+```typescript
+import { 
+  ScrapingSession, 
+  ScrapingSessionConfig
+} from 'scraper';
+
+// Create scraping session config
+const config: ScrapingSessionConfig = {
+  resourceLimits: {
+    maxConcurrentWorkers: 10,
+    maxRequestsPerMinute: 60,
+    maxRequestsPerHour: 1000
+  },
+  baseUrl: 'https://api.example.com',
+  httpClient: myHttpClient,
+  sessionProvider: mySessionProvider
+};
+
+// Create and initialize the scraping session
+// This will create controllers and workers
+const session = new ScrapingSession(config);
+await session.initialize();
+
+// Get a controller and execute tasks
+const myController = session.getController('district');
+const tasks = [
+  { id: '1', payload: { stateId: '1' } },
+  { id: '2', payload: { stateId: '2' } }
+];
+const results = await myController.execute(tasks);
+
+// Stop the session when done
+await session.stop();
+```
+
+## Creating Custom Controllers and Workers
+
+### Custom Worker
+
+```typescript
+import { BaseWorker } from 'scraper';
+
+// Define payload and result types
+interface MyPayload {
+  id: string;
+}
+
+interface MyResult {
+  value: string;
+}
+
+// Create a custom worker
+class MyWorker extends BaseWorker<MyPayload, MyResult> {
+  protected async executeTask(payload: MyPayload): Promise<MyResult> {
+    // Implement task execution logic
+    return { value: `Result for ${payload.id}` };
+  }
+}
+```
+
+### Custom Controller
+
+```typescript
+import { BaseController, ControllerConfigWithPool, WorkerConfig, Worker } from 'scraper';
+import { MyWorker } from './my-worker';
+
+// Create a custom controller
+class MyController extends BaseController<MyPayload, MyResult> {
+  constructor(config: ControllerConfigWithPool) {
+    super(config);
+  }
+  
+  // Initialize workers during controller creation
+  protected override initializeWorkers(): void {
+    if (!this.workerPool) return;
+    
+    // Create and add workers to the pool
+    const numWorkers = Math.min(3, this.config.maxConcurrentWorkers || 5);
+    
+    for (let i = 0; i < numWorkers; i++) {
+      const worker = this.createWorker(this.createWorkerConfig('/my-endpoint'));
+      this.addWorker(worker);
+    }
+  }
+  
+  // Create workers of the appropriate type
+  protected override createWorker(workerConfig: WorkerConfig): Worker<MyPayload, MyResult> {
+    return new MyWorker(workerConfig);
+  }
+}
+```
+
+## Development
+
+### Prerequisites
+
+- Node.js 16+
+- npm or yarn
+
+### Installation
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd scraper
-
-# Install dependencies
 npm install
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your Supabase credentials
 ```
 
-## Database Setup
-
-This project uses Supabase as a database to store the scraped data. The database schema is designed with versioning to track changes over time.
-
-### Setting Up the Database
-
-1. Create a Supabase project at [supabase.com](https://supabase.com)
-2. Add your Supabase credentials to the `.env` file:
-   ```
-   SUPABASE_URL=https://your-project.supabase.co
-   SUPABASE_KEY=your-service-role-key
-   ```
-3. Run the database setup script:
-   ```bash
-   npm run db:setup
-   ```
-
-If you encounter any issues during setup, refer to the [database README](db/README.md) for troubleshooting steps.
-
-For more details about the database structure, see the [database README](db/README.md).
-
-## Usage
-
-The package provides several example scripts to demonstrate its functionality:
-
-### 1. IGRO Example
-
-Demonstrates various scraping options:
+### Building
 
 ```bash
-npm run example:igro
+npm run build
 ```
 
-This example allows you to:
-- Fetch registration offices for a specific district
-- Fetch registration offices for all districts
-- Fetch villages for a registration office
-- Fetch plots for a village
-- Run the full scraper
-
-### 2. Random Sample Example
-
-Fetches a random sample of data from the hierarchy:
+### Testing
 
 ```bash
-npm run example:random
+npm test
 ```
-
-This example:
-- Randomly selects a district
-- Fetches registration offices for the district
-- Randomly selects a registration office
-- Fetches villages for the registration office
-- Randomly selects a village
-- Fetches plots for the village
-
-### 3. Market Rate Value Example
-
-Fetches market rate values for random plots:
-
-```bash
-npm run example:mr-value
-```
-
-This example:
-- Fetches a random sample of data
-- Selects random plots from the sample
-- Makes requests to the GetMRVal endpoint for each plot
-- Displays the market rate values with detailed breakdowns
-
-## API Reference
-
-### Core Functions
-
-#### `initializeSession()`
-
-Initializes a session with the IGRO website and fetches available districts.
-
-#### `fetchRegistrationOffices(sessionData, districtId)`
-
-Fetches registration offices for a specific district.
-
-#### `fetchVillages(sessionData, registrationOfficeId)`
-
-Fetches villages for a specific registration office.
-
-#### `fetchPlots(sessionData, villageId)`
-
-Fetches plots for a specific village.
-
-#### `fetchMRValue(payload)`
-
-Fetches the market rate value for a plot with the specified parameters.
-
-### Utility Functions
-
-#### `fetchRandomSample(initialDelayMs)`
-
-Fetches a random sample of data from the hierarchy.
-
-#### `fetchMRValueOfRandomPlots(initialDelayMs, numPlots)`
-
-Fetches market rate values for random plots.
-
-## Data Structures
-
-The scraper uses the following main data structures:
-
-- `State`: Represents a state with districts
-- `District`: Represents a district with registration offices
-- `RegistrationOffice`: Represents a registration office with villages
-- `Village`: Represents a village with plots
-- `Plot`: Represents a land plot with details
-- `MRValueResponse`: Represents a parsed market rate value response
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT 

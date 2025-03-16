@@ -50,11 +50,16 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
     console.log('Fetching random sample...');
     const sample = await fetchRandomSample(initialDelayMs);
     
-    if (!sample) {
+    if (!sample || !sample.districts || sample.districts.length === 0) {
       throw new Error('Failed to fetch random sample');
     }
     
-    const { district, registrationOffice, village, plots } = sample;
+    // Extract the components from the sample
+    // The sample is a State object with districts, registration_offices, villages, and plots
+    const district = sample.districts[0];
+    const registrationOffice = district.registration_offices[0];
+    const village = registrationOffice.villages[0];
+    const plots = village.plots || [];
     
     console.log(`Storing district: ${district.name}`);
     const districtUuid = await upsertDistrict({
@@ -108,11 +113,11 @@ async function storeRandomSample(initialDelayMs: number = 2000): Promise<void> {
         const plotUuid = await upsertPlot(
           {
             plot_id: plot.id,
-            plot_no: plot.plotNo,
-            khata_no: plot.khataNo,
-            area: parseFloat(plot.area) || undefined,
-            area_unit: plot.areaUnit,
-            plot_type: plot.plotType,
+            plot_no: plot.plot_number,
+            khata_no: plot.plot_id,
+            area: plot.area,
+            area_unit: plot.area_unit,
+            plot_type: plot.plot_type,
             village_id: village.id,
             village_name: village.name,
             registration_office_id: registrationOffice.id,

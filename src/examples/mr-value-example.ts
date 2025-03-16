@@ -138,4 +138,5 @@ async function main() {
 }
 
 // Run the main function
+export { fetchMRValueOfRandomPlots };
 main(); 

@@ -12,8 +12,8 @@ import {
   HttpClient,
   WorkerConfig
 } from '@/core/types/worker.js';
-import { BaseWorker } from '@/workers/base-worker.js';
-import { RegistrationOfficeFetchWorker } from '@/workers/registration-office-fetch-worker.js';
+import { BaseWorker } from '@/core/workers/base-worker.js';
+import { RegistrationOfficeFetchWorker } from '@/controllers/registration-office-controller.js';
 
 // Mock logger
 vi.mock('../src/utils/logger.js', () => ({

@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "dev": "ts-node src/index.ts",
-    "build": "tsc",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "prepublishOnly": "npm run build",
     "example:igro": "node --loader ts-node/esm src/examples/igro-example.ts",

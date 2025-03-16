@@ -2,17 +2,70 @@
  * Registration office controller implementation
  */
 
-import { BaseController } from '@/controllers/base-controller.js';
+import { BaseController, ControllerConfigWithPool } from '@/controllers/base-controller.js';
 import { 
   RegistrationOfficePayload, 
   RegistrationOfficeResult,
-  Task 
+  Task,
+  Worker,
+  WorkerConfig
 } from '@/core/types/worker.js';
-import { ControllerConfig } from '@/core/types/controller.js';
-import { RegistrationOfficeFetchWorker } from '@/workers/registration-office-fetch-worker.js';
-import { WorkerConfig } from '@/core/types/worker.js';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '@/utils/logger.js';
+import { BaseWorker } from '@/core/workers/base-worker.js';
+
+/**
+ * Registration Office Fetch Worker implementation
+ */
+export class RegistrationOfficeFetchWorker extends BaseWorker<RegistrationOfficePayload, RegistrationOfficeResult> {
+  /**
+   * Executes a task with the given payload
+   * 
+   * @param payload - Task payload
+   * @returns Promise resolving to the result
+   */
+  protected async executeTask(payload: RegistrationOfficePayload): Promise<RegistrationOfficeResult> {
+    logger.info(`Fetching registration offices for district ${payload.districtId}`);
+    
+    try {
+      // Make API request to fetch registration offices
+      const response = await this.config.httpClient.post(
+        `${this.config.baseUrl}${this.config.endpoint}`,
+        { districtId: payload.districtId },
+        this.createHeaders()
+      );
+      
+      // Process and return the response
+      return this.processResponse(response);
+    } catch (error) {
+      logger.error(`Error fetching registration offices for district ${payload.districtId}:`, error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Processes the API response
+   * 
+   * @param response - API response
+   * @returns Processed registration offices
+   */
+  private processResponse(response: any): RegistrationOfficeResult {
+    // In a real implementation, this would parse the response
+    // For now, we'll just return mock data
+    return [
+      {
+        id: 'ro-1',
+        name: 'Registration Office 1',
+        villages: []
+      },
+      {
+        id: 'ro-2',
+        name: 'Registration Office 2',
+        villages: []
+      }
+    ];
+  }
+}
 
 /**
  * Controller for managing registration office fetch workers
@@ -23,8 +76,27 @@ export class RegistrationOfficeController extends BaseController<RegistrationOff
    * 
    * @param config - Controller configuration
    */
-  constructor(config: ControllerConfig) {
+  constructor(config: ControllerConfigWithPool) {
     super(config);
+  }
+  
+  /**
+   * Initializes workers and adds them to the worker pool
+   */
+  protected override initializeWorkers(): void {
+    if (!this.workerPool) {
+      logger.warn('No worker pool available for RegistrationOfficeController');
+      return;
+    }
+    
+    // Create and add workers to the pool
+    const numWorkers = Math.min(3, this.config.maxConcurrentWorkers || 5);
+    logger.info(`Initializing ${numWorkers} registration office workers`);
+    
+    for (let i = 0; i < numWorkers; i++) {
+      const worker = this.createWorker(this.createWorkerConfig('/GetRegoffice'));
+      this.addWorker(worker);
+    }
   }
 
   /**
@@ -33,13 +105,8 @@ export class RegistrationOfficeController extends BaseController<RegistrationOff
    * @param workerConfig - Worker configuration
    * @returns The created worker
    */
-  createWorker(workerConfig: WorkerConfig): RegistrationOfficeFetchWorker {
-    const worker = new RegistrationOfficeFetchWorker({
-      ...workerConfig,
-      endpoint: workerConfig.endpoint || '/GetRegoffice'
-    });
-    
-    return worker;
+  protected override createWorker(workerConfig: WorkerConfig): Worker<RegistrationOfficePayload, RegistrationOfficeResult> {
+    return new RegistrationOfficeFetchWorker(workerConfig);
   }
 
   /**

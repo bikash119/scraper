@@ -9,10 +9,12 @@ import {
   RegistrationOfficeResult,
   SessionData,
   HttpClient,
-  Worker
+  Worker,
+  WorkerConfig
 } from '@/core/types/worker.js';
-import { BaseController } from '@/controllers/base-controller.js';
+import { BaseController, ControllerConfigWithPool } from '@/controllers/base-controller.js';
 import { RegistrationOfficeController } from '@/controllers/registration-office-controller.js';
+import { WorkerPool, WorkerPoolConfig } from '@/core/worker-pool-manager.js';
 
 // Mock logger
 vi.mock('@/utils/logger.js', () => ({
@@ -29,6 +31,18 @@ class MockWorker<P, R> implements Worker<P, R> {
   fetch = vi.fn();
   fetchBatch = vi.fn();
 }
+
+// Create a partial mock of WorkerPool for testing
+const createMockWorkerPool = <P, R>(config: WorkerPoolConfig): WorkerPool<P, R> => {
+  return {
+    addWorker: vi.fn().mockReturnValue(true),
+    borrowWorker: vi.fn(),
+    returnWorker: vi.fn().mockReturnValue(true),
+    getAvailableCount: vi.fn().mockReturnValue(3),
+    getTotalCount: vi.fn().mockReturnValue(3),
+    getName: vi.fn().mockReturnValue(config.name)
+  } as unknown as WorkerPool<P, R>;
+};
 
 describe('BaseController', () => {
   let controller: BaseController<string, number>;
@@ -277,9 +291,9 @@ describe('RegistrationOfficeController', () => {
     // Check that tasks were created correctly
     const tasks = worker.fetchBatch.mock.calls[0][0];
     expect(tasks.length).toBe(3);
-    expect(tasks[0].payload.distId).toBe('1');
-    expect(tasks[1].payload.distId).toBe('2');
-    expect(tasks[2].payload.distId).toBe('3');
+    expect(tasks[0].payload.districtId).toBe('1');
+    expect(tasks[1].payload.districtId).toBe('2');
+    expect(tasks[2].payload.districtId).toBe('3');
     
     // Check controller status
     const status = controller.getStatus();
@@ -341,20 +355,30 @@ describe('RegistrationOfficeController', () => {
     expect(status.isExecuting).toBe(false);
   });
   
-  it('should create a worker with the correct configuration', () => {
-    // Create worker
-    const workerConfig = {
+  it('should initialize workers when created with a worker pool', () => {
+    // Create a mock worker pool with a spy for addWorker
+    const addWorkerSpy = vi.fn().mockReturnValue(true);
+    const mockWorkerPool = createMockWorkerPool<RegistrationOfficePayload, RegistrationOfficeResult>({
+      name: 'test-pool',
+      maxWorkers: 3
+    });
+    
+    // Replace the addWorker function with our spy
+    (mockWorkerPool.addWorker as any) = addWorkerSpy;
+    
+    // Create a controller with the mock worker pool
+    const controllerWithPool = new RegistrationOfficeController({
+      maxConcurrentWorkers: 3,
+      maxTasksPerWorker: 10,
+      workerPool: mockWorkerPool,
       baseUrl: 'https://example.com',
-      endpoint: '/custom-endpoint',
       httpClient: {} as HttpClient,
       sessionProvider: () => ({} as SessionData)
-    };
+    });
     
-    const worker = controller.createWorker(workerConfig);
-    
-    // Check that worker was created with the correct configuration
-    expect(worker).toBeDefined();
-    // We can't directly check the worker's config, but we can check that it's an instance of the correct class
-    expect(worker.constructor.name).toBe('RegistrationOfficeFetchWorker');
+    // Check that workers were added to the pool
+    expect(addWorkerSpy).toHaveBeenCalled();
+    // Should have added 3 workers
+    expect(addWorkerSpy.mock.calls.length).toBe(3);
   });
 }); 

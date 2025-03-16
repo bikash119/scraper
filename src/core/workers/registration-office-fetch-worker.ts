@@ -7,7 +7,7 @@ import {
   RegistrationOfficeResult,
   WorkerConfig 
 } from '@/core/types/worker.js';
-import { BaseWorker } from '@/workers/base-worker.js';
+import { BaseWorker } from '@/core/workers/base-worker.js';
 import logger from '@/utils/logger.js';
 /**
  * Response structure from the registration office API

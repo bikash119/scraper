@@ -10,6 +10,12 @@ export * from '@/core/types/index.js';
 // Export IGRO scraper
 export * from '@/igro-scraper.js';
 
+// Export core components
+export * from '@/core/scraping-session.js';
+export * from '@/core/worker-pool-manager.js';
+export * from '@/core/workers/base-worker.js';
+export * from '@/controllers/base-controller.js';
+
 /**
  * Example function to demonstrate the library
  * @param url - The URL to scrape
